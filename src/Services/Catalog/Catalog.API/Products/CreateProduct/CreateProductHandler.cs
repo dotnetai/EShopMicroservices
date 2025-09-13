@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Catalog.API.Models;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Catalog.API.Products.CreateProduct
 {
@@ -7,10 +6,14 @@ namespace Catalog.API.Products.CreateProduct
         : ICommand<CreateProductResult>;
     public record CreateProductResult(Guid Id);
 
-    internal class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, CreateProductResult>
+    internal class CreateProductCommandHandler
+        (IDocumentSession session, ILogger<CreateProductCommandHandler> logger) 
+        : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
+            logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
+
             var product = new Product
             {
                 Name = command.Name,
@@ -20,7 +23,10 @@ namespace Catalog.API.Products.CreateProduct
                 Price = command.Price
             };
 
-            return new CreateProductResult(Guid.NewGuid());
+            session.Store(product);
+            await session.SaveChangesAsync(cancellationToken);   
+
+            return new CreateProductResult(product.Id);
         }
     }
 }
