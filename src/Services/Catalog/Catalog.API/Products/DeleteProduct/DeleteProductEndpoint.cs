@@ -1,7 +1,4 @@
-﻿
-using Catalog.API.Products.UpdateProduct;
-
-namespace Catalog.API.Products.DeleteProduct
+﻿namespace Catalog.API.Products.DeleteProduct
 {
     public record DeleteProductResponse(bool IsSuccess);
 
@@ -17,7 +14,7 @@ namespace Catalog.API.Products.DeleteProduct
 
                 return Results.Ok(response);
             })
-            .WithName("Delete Product")
+            .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
