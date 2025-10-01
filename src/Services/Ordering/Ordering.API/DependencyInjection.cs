@@ -12,7 +12,6 @@ namespace Ordering.API
             services.AddCarter();
 
             services.AddExceptionHandler<CustomExceptionHandler>();
-
             services.AddHealthChecks()
                 .AddSqlServer(configuration.GetConnectionString("Database")!);
 
@@ -24,7 +23,6 @@ namespace Ordering.API
             app.MapCarter();
 
             app.UseExceptionHandler(options => { });
-
             app.UseHealthChecks("/health",
                 new HealthCheckOptions
                 {
